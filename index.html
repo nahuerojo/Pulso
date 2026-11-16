@@ -3117,16 +3117,21 @@
     const PAY_LINK_MENSUAL = "";
     const PAY_LINK_UNICO = "";
 
-    /* Comentarios (Supabase). Completar con los datos de Project Settings → API.
+    /* Comentarios (Supabase). URL: botón "Connect" o Settings → Data API. Clave: Settings → API Keys → Publishable key.
        Mientras estén vacíos, el bloque de comentarios no se muestra. */
-    const SUPABASE_URL = "";
-    const SUPABASE_KEY = "";
+    const SUPABASE_URL = "https://lacbgoqaiuroyzfirvcz.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_dn1IgJiDkakykMcFkimCWQ_qAjriI0A";
 
     function joinCommunity() { go("sumate"); return false; }
 
     /* ===== Comentarios ===== */
     const cmOn = () => !!(SUPABASE_URL && SUPABASE_KEY);
-    const cmHeaders = () => ({ apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY, "Content-Type": "application/json" });
+    /* Clave publishable nueva (sb_publishable_...): va solo en "apikey". Clave anon vieja (eyJ...): también en Authorization. */
+    const cmHeaders = () => {
+      const h = { apikey: SUPABASE_KEY, "Content-Type": "application/json" };
+      if (!SUPABASE_KEY.startsWith("sb_")) h.Authorization = "Bearer " + SUPABASE_KEY;
+      return h;
+    };
     function cmWhen(iso) {
       const d = new Date(iso), s = (Date.now() - d) / 1000;
       if (s < 60) return "recién";
